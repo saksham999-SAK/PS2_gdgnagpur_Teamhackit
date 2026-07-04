@@ -1,0 +1,30 @@
+{
+  "builds": [
+    {
+      "src": "backend/main.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(auth|activity|dashboard|ai|leaderboard|platform)/(.*)",
+      "destination": "/backend/main.py"
+    },
+    {
+      "source": "/(auth|activity|dashboard|ai|leaderboard|platform)",
+      "destination": "/backend/main.py"
+    },
+    {
+      "source": "/",
+      "destination": "/frontend/home.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
+    }
+  ]
+}
