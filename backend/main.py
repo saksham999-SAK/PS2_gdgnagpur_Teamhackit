@@ -58,9 +58,11 @@ app.include_router(leaderboard_router)
 app.include_router(platform_router)
 
 # -------------------------
-# Create Tables Automatically
+# Create Tables Automatically on Startup
 # -------------------------
-Base.metadata.create_all(bind=engine)
+@app.on_event("startup")
+def startup_event():
+    Base.metadata.create_all(bind=engine)
 
 
 # -------------------------
