@@ -1,5 +1,7 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+import traceback
 
 from database import engine, Base
 from routes.auth_routes import router as auth_router
@@ -28,6 +30,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# -------------------------
+# Global Exception Handler (For deployment debugging)
+# -------------------------
+@app.exception_handler(Exception)
+def global_exception_handler(request: Request, exc: Exception):
+    tb = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+    print("CRITICAL EXCEPTION IN BACKEND:")
+    print(tb)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": f"{type(exc).__name__}: {str(exc)}",
+            "traceback": tb
+        }
+    )
 
 # -------------------------
 # Include Routes
