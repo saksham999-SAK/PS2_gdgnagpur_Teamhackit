@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EcoCommit Dashboard</title>
+
+<link rel="stylesheet" href="global.css">
+<link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="toast.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+<div id="navbar-container"></div>
+
+<main class="container">
+
+<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom: 30px; gap: 15px;">
+  <div>
+    <h1 id="dashboardGreeting">Hello Eco Warrior! 🌿</h1>
+    <p class="subtitle" style="margin-bottom:0;">Your custom sustainability cockpit</p>
+  </div>
+  <div style="display:flex; gap:12px; align-items:center;">
+    <div style="background: rgba(13,29,20,0.7); border:1px solid rgba(34,197,94,0.15); padding: 8px 16px; border-radius: 100px; display:flex; align-items:center; gap:8px; font-size: 14px; font-weight:600; color:var(--text-main);">
+      <span>☀️ 72°F Seattle</span>
+    </div>
+    <div style="background: rgba(13,29,20,0.7); border:1px solid rgba(34,197,94,0.15); padding: 8px 16px; border-radius: 100px; display:flex; align-items:center; gap:8px; font-size: 14px; font-weight:600; color:#84cc16; box-shadow: 0 0 10px rgba(132, 204, 22, 0.15);">
+      <span>🔥 Streak: 5 Days</span>
+    </div>
+  </div>
+</div>
+
+
+<section class="stats">
+
+<div class="stat">
+<i data-lucide="trending-down"></i>
+<span>Daily CO₂ Saved</span>
+<h2 class="count" id="statDailyCO2" data-target="0" data-suffix=" kg">0</h2>
+</div>
+
+<div class="stat">
+<i data-lucide="leaf"></i>
+<span>Monthly CO₂ Saved</span>
+<h2 class="count" id="statMonthlyCO2" data-target="0" data-suffix=" kg">0</h2>
+</div>
+
+<div class="stat">
+<i data-lucide="tree-pine"></i>
+<span>Trees Equivalent</span>
+<h2 class="count" id="statTrees" data-target="0">0</h2>
+</div>
+
+<div class="stat">
+<i data-lucide="dollar-sign"></i>
+<span>Money Saved</span>
+<h2 class="count" id="statMoney" data-target="0" data-prefix="$">0</h2>
+</div>
+
+<div class="stat">
+<i data-lucide="star"></i>
+<span>EcoPoints</span>
+<h2 class="count" id="statEcoPoints" data-target="0">0</h2>
+</div>
+
+</section>
+
+
+<section class="grid">
+
+
+<div class="card">
+
+<h3><i data-lucide="zap"></i> Track Your Transport</h3>
+
+<div class="transport">
+<button class="tbtn active" data-mode="Walk">Walk</button>
+<button class="tbtn" data-mode="Bus">Bus</button>
+<button class="tbtn" data-mode="Bike">Bike</button>
+<button class="tbtn" data-mode="Car">Car</button>
+</div>
+
+<div class="goalBox">
+<label>Today's Distance Goal (km)</label>
+<input id="goalInput" type="number" min="0" step="0.1" value="5">
+</div>
+
+<p class="distance">
+Progress: <b id="progressKm">0.00</b> /
+<b id="goalDisplay">5</b> km
+</p>
+
+<input id="range" type="range" min="0" max="100" value="0" disabled>
+
+<div id="gpsContainer" style="display:none; margin: 18px 0; background: rgba(5,15,10,0.8); border: 1px solid rgba(34,197,94,0.25); border-radius: var(--radius-md); height: 160px; overflow: hidden; position: relative;">
+  <canvas id="gpsCanvas" style="width:100%; height:100%; display:block;"></canvas>
+  <div style="position: absolute; top: 12px; left: 12px; font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+    <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#22c55e; animation: pulse 1.5s infinite;"></span> LIVE ROUTE MOCK
+  </div>
+</div>
+
+<button id="trackBtn" class="submit">Start Tracking</button>
+
+<hr>
+
+<h4 class="pledgeTitle">
+<i data-lucide="snowflake"></i>
+No-AC Day Pledge
+</h4>
+
+<div class="pledgeCard">
+🌿 I Used No AC Today
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3><i data-lucide="brain"></i> AI Engine</h3>
+
+<ul class="ai">
+<li>Activity Classification <span class="done">✓ Complete</span></li>
+<li>Carbon Calculator <span class="done">✓ Complete</span></li>
+<li>Impact Predictor <span id="predict" class="loading">Analyzing…</span></li>
+<li>Recommendation Engine <span class="done">✓ Complete</span></li>
+</ul>
+
+<div class="aiBox" id="aiRecommendationBox">
+Loading AI recommendations...
+</div>
+
+</div>
+
+</section>
+
+
+<section class="charts">
+
+<div class="chartCard">
+<h4>Weekly Carbon Reduction</h4>
+<canvas id="lineChart"></canvas>
+</div>
+
+<div class="chartCard">
+<h4>Activity Distribution</h4>
+<canvas id="pieChart"></canvas>
+</div>
+
+<div class="chartCard">
+<h4>Monthly Progress</h4>
+<canvas id="barChart"></canvas>
+</div>
+
+<div class="chartCard">
+<h4>Platform Impact Growth</h4>
+<canvas id="areaChart"></canvas>
+</div>
+
+</section>
+
+
+<section class="future">
+
+<h3><i data-lucide="brain"></i> AI Future Impact Analysis</h3>
+
+<p class="futureSub">
+Real-time projected impact based on platform data
+</p>
+
+<div class="futureCards">
+
+<div class="fCard green">
+<h2 id="co2">--</h2>
+<span>Tons CO₂ Reduced / Year</span>
+</div>
+
+<div class="fCard blue">
+<h2 id="aqi">--</h2>
+<span>AQI Points Improved</span>
+</div>
+
+<div class="fCard gold">
+<h2 id="fuel">--</h2>
+<span>Fuel Savings</span>
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<script src="toast.js"></script>
+<script src="api.js"></script>
+<script src="dashboard.js"></script>
+<script src="navbar.js"></script>
+<script src="global-animations.js"></script>
+
+</body>
+</html>
